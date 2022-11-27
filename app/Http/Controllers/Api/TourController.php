@@ -19,14 +19,14 @@ class TourController extends Controller
      */
     public function index()
     {
-        // $tours = Tour::all();
-        // foreach($tours as $tour){
-        //     $images = TourImage::where('tour_id', $tour->id);
-        //     $schedules = TourSchedule::where('tour_id', $tour->id);
-        //     $tour['images'] = $images;
-        //     $tour['schedules'] = $schedules;
-        // }
-        // return $tours;
+        $tours = Tour::all();
+        foreach($tours as $tour){
+            $images = TourImage::where('tour_id', $tour->id);
+            $schedules = TourSchedule::where('tour_id', $tour->id);
+            $tour['images'] = $images;
+            $tour['schedules'] = $schedules;
+        }
+        return $tours;
     }
 
     /**

@@ -17,7 +17,7 @@ class TourScheduleController extends Controller
     public function index()
     {
         //
-        return TourSchedule::where('tour_id', $id);
+        // return TourSchedule::where('tour_id', $id);
     }
 
     /**
