@@ -17,4 +17,13 @@ class Tour extends Model
         'type_id',
         'description'
     ];
+    /**
+     * Get the user that owns the Tour
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(TourType::class, 'type_id', 'id');
+    }
 }

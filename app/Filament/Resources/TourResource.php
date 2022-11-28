@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TourResource\Pages;
 use App\Filament\Resources\TourResource\RelationManagers;
 use App\Models\Tour;
+use App\Models\TourType;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -25,9 +26,8 @@ class TourResource extends Resource
             ->schema([
                 //
                 Forms\Components\TextInput::make('title')->required(),
-                Forms\Components\Toggle::make('active')->required(),
-                Forms\Components\Select::make('type_id')->options([])->required(),
-                Forms\Components\RichEditor::make('description')
+                Forms\Components\Select::make('type_id')->options(TourType::all()->pluck('name', 'id'))->required(),
+                Forms\Components\Textarea::make('description')
             ]);
     }
 
@@ -38,7 +38,7 @@ class TourResource extends Resource
                 //
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('active'),
-                Tables\Columns\TextColumn::make('type_id'),
+                Tables\Columns\TextColumn::make('type_id')->description(fn (TourType $record): string => $record->name),
             ])
             ->filters([
                 //
@@ -52,13 +52,13 @@ class TourResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-            Tables\Actions\ForceDeleteAction::make(),
-            Tables\Actions\RestoreAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            Tables\Actions\ForceDeleteBulkAction::make(),
-            Tables\Actions\RestoreBulkAction::make(),   
+                Tables\Actions\ForceDeleteBulkAction::make(),
+                Tables\Actions\RestoreBulkAction::make(),   
             ]);
     }
     

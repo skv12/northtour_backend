@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\TourScheduleController;
+use App\Http\Controllers\Api\TourTypeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,4 +27,5 @@ use App\Http\Controllers\Api\TourScheduleController;
 Route::apiResources([
     'v1/tours' => TourController::class,
     'v1/tours/{id}/schedule' => TourScheduleController::class,
+    'v1/tourtypes' => TourTypeController::class,
 ]);
