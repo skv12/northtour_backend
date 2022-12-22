@@ -40,8 +40,9 @@ class TourTypeController extends Controller
      */
     public function show($id)
     {
-        //
-        
+        $tourtype_tours = TourType::find($id)->tours;
+        $headers = [ 'Content-Type' => 'application/json; charset=utf-8' ];
+        return response()->json($tourtype_tours, 200, $headers, JSON_UNESCAPED_UNICODE);
     }
 
     /**

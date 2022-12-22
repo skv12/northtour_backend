@@ -7,9 +7,11 @@ use App\Filament\Resources\TourResource\RelationManagers;
 use App\Models\Tour;
 use App\Models\TourType;
 use Filament\Forms;
+use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
+
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -25,9 +27,13 @@ class TourResource extends Resource
         return $form
             ->schema([
                 //
+                Forms\Components\Hidden::make('operator_id')->default(auth()->user()->id)->required(),
                 Forms\Components\TextInput::make('title')->required(),
-                Forms\Components\Select::make('type_id')->options(TourType::all()->pluck('name', 'id'))->required(),
-                Forms\Components\Textarea::make('description')
+                Forms\Components\Select::make('type_id')->relationship('type', 'name')->required(),
+                Forms\Components\Textarea::make('description'),
+                Forms\Components\TextInput::make('place'),
+                Forms\Components\TextInput::make('accommodation'),
+                Forms\Components\Select::make('packages')->multiple()->relationship('packages', 'name')
             ]);
     }
 
@@ -37,8 +43,8 @@ class TourResource extends Resource
             ->columns([
                 //
                 Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\TextColumn::make('active'),
-                Tables\Columns\TextColumn::make('type_id')->description(fn (TourType $record): string => $record->name),
+                Tables\Columns\ToggleColumn::make('active'),
+                Tables\Columns\TextColumn::make('type_id.name'),
             ])
             ->filters([
                 //
@@ -65,7 +71,8 @@ class TourResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ImagesRelationManager::class,
+            RelationManagers\SchedulesRelationManager::class,
         ];
     }
     
@@ -78,10 +85,11 @@ class TourResource extends Resource
         ];
     }    
     public static function getEloquentQuery(): Builder
-{
-    return parent::getEloquentQuery()
-        ->withoutGlobalScopes([
-            SoftDeletingScope::class,
-        ]);
-}
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+
 }

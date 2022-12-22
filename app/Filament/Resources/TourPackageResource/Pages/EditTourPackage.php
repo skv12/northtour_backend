@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Filament\Resources\TourResource\Pages;
+namespace App\Filament\Resources\TourPackageResource\Pages;
 
-use App\Filament\Resources\TourResource;
+use App\Filament\Resources\TourPackageResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditTour extends EditRecord
+class EditTourPackage extends EditRecord
 {
-    protected static string $resource = TourResource::class;
+    protected static string $resource = TourPackageResource::class;
 
     protected function getActions(): array
     {
         return [
-            //Actions\LocaleSwitcher::make(),
             Actions\DeleteAction::make(),
             Actions\ForceDeleteAction::make(),
             Actions\RestoreAction::make(),

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TourTypeResource\Pages;
-use App\Filament\Resources\TourTypeResource\RelationManagers;
-use App\Models\TourType;
+use App\Filament\Resources\TourPackageResource\Pages;
+use App\Filament\Resources\TourPackageResource\RelationManagers;
+use App\Models\TourPackageType;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -12,10 +12,10 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Resources\Concerns\Translatable;
-class TourTypeResource extends Resource
+
+class TourPackageResource extends Resource
 {
-    protected static ?string $model = TourType::class;
+    protected static ?string $model = TourPackageType::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
@@ -26,6 +26,11 @@ class TourTypeResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\FileUpload::make('icon')
+                    ->acceptedFileTypes(['image/svg+xml'])
+                    ->imageCropAspectRatio('1:1')
+                    ->imageResizeTargetWidth('24')
+                    ->imageResizeTargetHeight('24')->preserveFilenames(),
             ]);
     }
 
@@ -34,18 +39,12 @@ class TourTypeResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime(),
+                Tables\Columns\ImageColumn::make('icon')->width(24)->height(24),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -65,10 +64,9 @@ class TourTypeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTourTypes::route('/'),
-            'create' => Pages\CreateTourType::route('/create'),
-            'view' => Pages\ViewTourType::route('/{record}'),
-            'edit' => Pages\EditTourType::route('/{record}/edit'),
+            'index' => Pages\ListTourPackages::route('/'),
+            'create' => Pages\CreateTourPackage::route('/create'),
+            'edit' => Pages\EditTourPackage::route('/{record}/edit'),
         ];
     }    
     

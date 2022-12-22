@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tour;
+use App\Models\TourType;
 
 class TourController extends Controller
 {
     //
     public function index(){
-        $tours = Tour::all();
+        $tours = TourType::paginate(10);
         return view('tours.index', compact('tours'));
     }
 
@@ -25,12 +26,14 @@ class TourController extends Controller
 
     public function store(){
         $data = request()->validate([
-            'title' => 'string',
+            'title' => 'required|string',
             'active' => 'boolean',
-            'type_id' => 'integer',
-            'description' => 'string',
+            'type_id' => 'required|integer',
+            'description' => 'required|string',
         ]);
-        Tour::create($data);
+        $packages = $data['packages'];
+        $tour = Tour::create($data);
+        $tour->packages()->attach($packages);
         return redirect()->route('tours.index');
     }
 
@@ -39,6 +42,15 @@ class TourController extends Controller
     }
 
     public function edit(Tour $tour){
+        $data = request()->validate([
+            'title' => 'string',
+            'active' => 'boolean',
+            'type_id' => 'integer',
+            'description' => 'string',
+        ]);
+        $packages = $data['packages'];
+        $tour = Tour::create($data);
+        $tour->packages()->sync($packages);
         return view('tour.edit', compact('tour'));
     }
 

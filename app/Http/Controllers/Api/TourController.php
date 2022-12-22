@@ -19,12 +19,13 @@ class TourController extends Controller
      */
     public function index()
     {
-        $tours = Tour::all();
+        $tours = Tour::where('active', true)->paginate(15);
         foreach($tours as $tour){
-            $images = TourImage::where('tour_id', $tour->id);
-            $schedules = TourSchedule::where('tour_id', $tour->id);
-            $tour['images'] = $images;
-            $tour['schedules'] = $schedules;
+            // $images = TourImage::where('tour_id', $tour->id);
+            // $schedules = TourSchedule::where('tour_id', $tour->id);
+            $tour->image;
+            $tour->schedules;
+            $tour->packages;
         }
         return $tours;
     }
@@ -78,16 +79,14 @@ class TourController extends Controller
      */
     public function show($id)
     {
-        $data = Tour::find($id);
-        $images = TourImage::where('tour_id', $id);
-        $packages = TourPackage::where('tour_id', $id);
-        $schedules = TourSchedule::where('tour_id', $id);
-        $buyers = TourBuyer::where('tour_id', $id);
-        $data['images'] = $images;
-        $data['packages'] = $packages;
-        $data['schedules'] = $schedules;
-        $data['buyers'] = $buyers;
-        return $data;
+        $tour = Tour::find($id);
+        if(!$tour['active'])
+            return response()->json([
+                'message' => 'Tour is not active'], 404);
+        $tour->images;
+        $tour->schedules;
+        $tour->packages;
+        return $tour;
     }
 
     /**
